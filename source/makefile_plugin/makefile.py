@@ -21,6 +21,7 @@ class Command(Process):
                                     warning_patterns=['Warning', 'warning', 'WARNING', 'Avertissement', 'avertissement', 'AVERTISSEMENT'],\
                                     warning_exceptions=[])
     
+    @Process.error_checks
     def process(self, verbose=False, warning_as_error=False):
         Logger.get().info('Building : ' + self.type + ':' + self.name)
         if os.path.isdir(self.cwd):
@@ -50,7 +51,8 @@ class Command(Process):
         Logger.get().error('Unknown directory : ' + self.workspace)
         return False
     
-    def clean(self, verbose=False):
+    @Process.error_checks
+    def clean(self, verbose=False, warning_as_error=False):
         Logger.get().info('Entering directory : ' + self.workspace)
         if os.path.isdir(self.cwd):
             if os.path.isfile(os.path.join(self.cwd, 'Makefile')) or os.path.isfile(os.path.join(self.cwd, 'makefile')):
@@ -67,6 +69,7 @@ class Command(Process):
                     Logger.get().error('Clean failed : ' + self.type + ':' + self.name)
                 return returncode == 0
         Logger.get().info('No makefile found')
+        self.status = pyven.constants.STATUS[0]
         return True
         
     def report_summary(self):
