@@ -11,7 +11,7 @@ class MakefileParser(Parser):
         MakefileParser.COUNT += 1
         super(MakefileParser, self).__init__(cwd)
     
-    def parse(self, node):
+    def parse(self, node, project):
         objects = []
         members = self.parse_process(node)
         errors = []
